@@ -28,8 +28,8 @@ public class LoginScene
 	private LoginScene()
 	{
 
-		nameInputField = new InputField("请输入用户名：", 40, false);
-		passwordInputField = new InputField("请输入密码：", 40, true);
+		nameInputField = new InputField("用户名：", 50, false);
+		passwordInputField = new InputField("密码：", 50, true);
 
 		warningText = new Text();
 		warningText.setStyle("-fx-fill:red;-fx-font-weight: bold");
