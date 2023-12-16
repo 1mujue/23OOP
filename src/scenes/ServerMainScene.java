@@ -1,6 +1,8 @@
 package scenes;
 
+import Clients.ClientInformation;
 import Servers.Server;
+import javafx.application.Platform;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.geometry.Insets;
@@ -9,26 +11,28 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextField;
-import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
-import javafx.stage.Stage;
+import nodeGroups.ClientPane;
 
 public class ServerMainScene
 {
 	private Scene mainScene;
 	private Text serverState;
-	private Server server;
+
 	private Text log;
+	private IntegerProperty currentClientCount;
+	private Server server;
+	private ClientPane currentClientPane;
 
 	private static ServerMainScene serverMainSceneInstance = new ServerMainScene();
 
 	private ServerMainScene()
 	{
 		server = Server.getServer();
+		currentClientPane = new ClientPane();
 
 		BorderPane mainPane = new BorderPane();
 
@@ -51,53 +55,18 @@ public class ServerMainScene
 		HBox currentClientCountBox = new HBox(5);
 		Text currentClientCountText = new Text("当前在线人数：");
 		Label currentClientCountLabel = new Label();
-		IntegerProperty currentClientCount = new SimpleIntegerProperty(0);
+		currentClientCount = new SimpleIntegerProperty(0);
 		currentClientCountLabel.textProperty().bind(currentClientCount.asString());
 		currentClientCountBox.getChildren().addAll(currentClientCountText, currentClientCountLabel);
 		infoList.getChildren().addAll(serverStateBox, currentClientCountBox);
 
 		VBox currentClientControllerBox = new VBox();
-		ScrollPane currentClientListScrollPane = new ScrollPane();
-		currentClientListScrollPane.setPrefSize(100, 500);
-		currentClientListScrollPane.setHbarPolicy(ScrollBarPolicy.NEVER);
-		currentClientListScrollPane.setVbarPolicy(ScrollBarPolicy.AS_NEEDED);
-		VBox currentClientList = new VBox();
-		currentClientListScrollPane.setContent(currentClientList);
-		HBox currentClientBottons = new HBox();
+		HBox clientControlBottonBox = new HBox();
 		Button sendButton = new Button("发送");
 		Button banButton = new Button("踢出");
-		currentClientBottons.getChildren().addAll(sendButton, banButton);
-		currentClientControllerBox.getChildren().addAll(currentClientListScrollPane, currentClientBottons);
-
-		sendButton.setOnAction(event ->
-		{
-			Stage messageStage = new Stage();
-			TextField messageField = new TextField();
-			Scene messageScene = new Scene(messageField);
-			messageStage.setScene(messageScene);
-			messageStage.show();
-		});
-		startButton.setOnAction(event ->
-		{
-			serverState.setText("开启");
-			serverState.setStyle("-fx-fill: green");
-			server.startServer();
-
-//			currentClientCount.set(currentClientCount.get() + 1);
-//			HBox clientBox = new HBox(20);
-//			clientBox.setAlignment(Pos.CENTER_RIGHT);
-//			Label testClient = new Label("芝士用户");
-//			RadioButton selectoRadioButton = new RadioButton();
-//			clientBox.getChildren().addAll(testClient, selectoRadioButton);
-//			currentClientList.getChildren().add(clientBox);
-
-		});
-		stopButton.setOnAction(evene ->
-		{
-			serverState.setText("关闭");
-			serverState.setStyle("-fx-fill: red");
-			server.stopServer();
-		});
+		clientControlBottonBox.getChildren().addAll(sendButton, banButton);
+		currentClientControllerBox.getChildren().addAll(currentClientPane.getClientListScrollPane(),
+				clientControlBottonBox);
 
 		ScrollPane logScrollPane = new ScrollPane();
 		log = new Text("服务器日志喵~~~\n");
@@ -109,6 +78,33 @@ public class ServerMainScene
 		mainPane.setLeft(currentClientControllerBox);
 
 		mainScene = new Scene(mainPane);
+
+		sendButton.setOnAction(event ->
+		{
+
+			currentClientPane.getArrayList();
+
+//			Stage messageStage = new Stage();
+//			TextField messageField = new TextField();
+//			Scene messageScene = new Scene(messageField);
+//			messageStage.setScene(messageScene);
+//			messageStage.show();
+		});
+		banButton.setOnAction(event ->
+		{
+		});
+		startButton.setOnAction(event ->
+		{
+			serverState.setText("开启");
+			serverState.setStyle("-fx-fill: green");
+			server.startServer();
+		});
+		stopButton.setOnAction(evene ->
+		{
+			serverState.setText("关闭");
+			serverState.setStyle("-fx-fill: red");
+			server.stopServer();
+		});
 	}
 
 	public static Scene getScene()
@@ -120,6 +116,19 @@ public class ServerMainScene
 	{
 		if (message.charAt(message.length() - 1) != '\n')
 			message += "\n";
-		serverMainSceneInstance.log.setText(serverMainSceneInstance.log.getText() + message);
+		String newMessage = message;
+		Platform.runLater(() ->
+		{
+			serverMainSceneInstance.log.setText(serverMainSceneInstance.log.getText() + newMessage);
+		});
+	}
+
+	public static void addClient(ClientInformation clientInformation)
+	{
+		Platform.runLater(() ->
+		{
+			serverMainSceneInstance.currentClientCount.set(serverMainSceneInstance.currentClientCount.get() + 1);
+			serverMainSceneInstance.currentClientPane.addClientBar(clientInformation);
+		});
 	}
 }

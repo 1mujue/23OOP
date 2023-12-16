@@ -16,6 +16,8 @@ public class LoginStage
 
 		LoginScene.initStage(loginStage, primaryStage);
 		LoginScene.initSignUpBotton(SignUpScene.getScene());
+		SignUpScene.initStage(loginStage);
+		SignUpScene.initLoginBotton(LoginScene.getScene());
 		loginStage.setScene(LoginScene.getScene());
 
 		return loginStage;
