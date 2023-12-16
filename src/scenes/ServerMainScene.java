@@ -21,6 +21,7 @@ public class ServerMainScene
 {
 	private Scene mainScene;
 	private Text serverState;
+
 	private Text log;
 	private IntegerProperty currentClientCount;
 	private Server server;

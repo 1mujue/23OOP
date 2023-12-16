@@ -1,4 +1,3 @@
-
 package scenes;
 
 import Clients.Client;
@@ -60,5 +59,4 @@ public class ClientMainScene
 		ChatPane.setClient(mainSceneInstance.client);
 		FriendPane.setClient(mainSceneInstance.client);
 	}
-
 }

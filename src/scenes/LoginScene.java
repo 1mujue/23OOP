@@ -25,6 +25,7 @@ public class LoginScene
 	private Button signUpButton;
 
 	final private static int TitleWidth = 50;
+  
 	private static LoginScene loginSceneInstance = new LoginScene();
 
 	private LoginScene()
