@@ -15,7 +15,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
-import nodeGroups.ClientList;
+import nodeGroups.ClientPane;
 
 public class ServerMainScene
 {
@@ -24,15 +24,15 @@ public class ServerMainScene
 	private Text log;
 	private IntegerProperty currentClientCount;
 	private Server server;
-	private ClientList currentClientList;
+	private ClientPane currentClientPane;
 
 	private static ServerMainScene serverMainSceneInstance = new ServerMainScene();
 
 	private ServerMainScene()
 	{
 		server = Server.getServer();
-		currentClientList = new ClientList();
-		
+		currentClientPane = new ClientPane();
+
 		BorderPane mainPane = new BorderPane();
 
 		HBox controlButtons = new HBox(40);
@@ -58,20 +58,31 @@ public class ServerMainScene
 		currentClientCountLabel.textProperty().bind(currentClientCount.asString());
 		currentClientCountBox.getChildren().addAll(currentClientCountText, currentClientCountLabel);
 		infoList.getChildren().addAll(serverStateBox, currentClientCountBox);
-		
+
 		VBox currentClientControllerBox = new VBox();
-		HBox clientControlBottonBox= new HBox();
+		HBox clientControlBottonBox = new HBox();
 		Button sendButton = new Button("发送");
 		Button banButton = new Button("踢出");
 		clientControlBottonBox.getChildren().addAll(sendButton, banButton);
-		currentClientControllerBox.getChildren().addAll(currentClientList.getClientListScrollPane(),
+		currentClientControllerBox.getChildren().addAll(currentClientPane.getClientListScrollPane(),
 				clientControlBottonBox);
+
+		ScrollPane logScrollPane = new ScrollPane();
+		log = new Text("服务器日志喵~~~\n");
+		logScrollPane.setContent(log);
+
+		mainPane.setCenter(logScrollPane);
+		mainPane.setTop(infoList);
+		mainPane.setBottom(controlButtons);
+		mainPane.setLeft(currentClientControllerBox);
+
+		mainScene = new Scene(mainPane);
 
 		sendButton.setOnAction(event ->
 		{
-			
-			currentClientList.getArrayList();
-			
+
+			currentClientPane.getArrayList();
+
 //			Stage messageStage = new Stage();
 //			TextField messageField = new TextField();
 //			Scene messageScene = new Scene(messageField);
@@ -93,17 +104,6 @@ public class ServerMainScene
 			serverState.setStyle("-fx-fill: red");
 			server.stopServer();
 		});
-
-		ScrollPane logScrollPane = new ScrollPane();
-		log = new Text("服务器日志喵~~~\n");
-		logScrollPane.setContent(log);
-
-		mainPane.setCenter(logScrollPane);
-		mainPane.setTop(infoList);
-		mainPane.setBottom(controlButtons);
-		mainPane.setLeft(currentClientControllerBox);
-
-		mainScene = new Scene(mainPane);
 	}
 
 	public static Scene getScene()
@@ -127,7 +127,7 @@ public class ServerMainScene
 		Platform.runLater(() ->
 		{
 			serverMainSceneInstance.currentClientCount.set(serverMainSceneInstance.currentClientCount.get() + 1);
-			serverMainSceneInstance.currentClientList.addClientBar(clientInformation);
+			serverMainSceneInstance.currentClientPane.addClientBar(clientInformation);
 		});
 	}
 }

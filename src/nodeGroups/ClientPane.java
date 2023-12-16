@@ -3,26 +3,27 @@ package nodeGroups;
 import java.util.ArrayList;
 
 import Clients.ClientInformation;
+import javafx.application.Platform;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.scene.layout.VBox;
 
-public class ClientList
+public class ClientPane
 {
 	private ArrayList<ClientInformation> clientLArrayList;
 	private ScrollPane clientListScrollPane;
-	private VBox currentClientList;
+	private VBox clientBox;
 
-	public ClientList()
+	public ClientPane()
 	{
 		clientLArrayList = new ArrayList<ClientInformation>();
 
 		clientListScrollPane = new ScrollPane();
-		clientListScrollPane.setPrefSize(100, 500);
+		clientListScrollPane.setMinSize(100, 450);
 		clientListScrollPane.setHbarPolicy(ScrollBarPolicy.NEVER);
 		clientListScrollPane.setVbarPolicy(ScrollBarPolicy.ALWAYS);
-		currentClientList = new VBox();
-		clientListScrollPane.setContent(currentClientList);
+		clientBox = new VBox();
+		clientListScrollPane.setContent(clientBox);
 
 	}
 
@@ -34,12 +35,20 @@ public class ClientList
 	public void addClientBar(ClientInformation clientInformation)
 	{
 		ClientBar clientBar = new ClientBar(clientInformation, this);
-		currentClientList.getChildren().add(clientBar.getClientBox());
+		Platform.runLater(() ->
+		{
+			clientBox.getChildren().add(clientBar.getClientBox());
+		});
+
 	}
 
-	public void removeClientBar(ClientBar clientBar)
+	public void removeAll()
 	{
-		currentClientList.getChildren().remove(clientBar.getClientBox());
+		Platform.runLater(() ->
+		{
+			clientBox.getChildren().clear();
+		});
+		clientLArrayList.clear();
 	}
 
 	public void addClient(ClientInformation clientInformation)

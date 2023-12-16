@@ -8,12 +8,12 @@ import javafx.scene.text.Text;
 
 public class ClientBar
 {
-	private ClientList clientList;
+	private ClientPane clientList;
 	private HBox clientBox;
 	private CheckBox selectoCheckBox;
 	private ClientInformation clientInformation;
 
-	public ClientBar(ClientInformation clientInformation, ClientList clientList)
+	public ClientBar(ClientInformation clientInformation, ClientPane clientList)
 	{
 		this.clientInformation = clientInformation;
 		this.clientList = clientList;

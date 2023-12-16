@@ -2,6 +2,7 @@ package Clients;
 
 import Exceptions.OrderExceptions.*;
 import SpecialClass.Message;
+import nodeGroups.ChatPane;
 import scenes.ClientMainScene;
 import scenes.LoginScene;
 import scenes.ServerMainScene;
@@ -379,7 +380,7 @@ public class Client
 	private void printMessage(String text)
 	{
 		System.out.println(text);
-		ClientMainScene.printMessage(text);
+		ChatPane.printMessage(text);
 	}
 
 	class ClientThread implements Runnable

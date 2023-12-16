@@ -17,7 +17,7 @@ public class ClientApplication extends Application
 	public void start(Stage primaryStage) throws Exception
 	{
 		primaryStage.setTitle("聊天室");
-		primaryStage.setWidth(800);
+		primaryStage.setWidth(900);
 		primaryStage.setHeight(600);
 
 		Stage loginStage = LoginStage.getLoginStage(primaryStage);

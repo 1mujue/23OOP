@@ -47,7 +47,7 @@ public class Server
 
 	private Server()
 	{
-		dynamic_client_informations = new ClientList("dynamic");
+		dynamic_client_informations = new ClientList("all");
 		clientLists = new ArrayList<>();
 		new InitiateFileTool(clientLists, "./FriendLists.txt").executeTool();
 		clientLists = (ArrayList<ClientList>) new DeserializeTool("./FriendLists.txt").executeTool();
@@ -55,7 +55,7 @@ public class Server
 		{
 			clientLists = new ArrayList<>();
 		}
-		static_client_informations = new ClientList("static");
+		static_client_informations = new ClientList("all");
 		new InitiateFileTool(static_client_informations, "./Server.txt").executeTool();
 		static_client_informations = (ClientList) new DeserializeTool("./Server.txt").executeTool();
 		if (static_client_informations == null)
